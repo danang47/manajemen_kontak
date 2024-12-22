@@ -1,14 +1,23 @@
 "Program Manajemen Kontak"
 
+def membuka_kontak(path='kontak.txt'):
+    with open(path, mode='r') as file:
+        kontak = file.readlines()
+    return kontak
+
+def menyimpan_kontak(path='kontak.txt', isi=[]):
+    with open(path, mode='w') as file:
+        file.writelines(isi)
+
 class Kontak:
     def __init__(self):
-        self.kontak = []
+        self.kontak = membuka_kontak()
 
     def melihat_kontak(self):
         # Melihat Semua Kontak
         if self.kontak:
             for num, item in enumerate(self.kontak, start=1):
-                print(f'\n{num}. {item["Nama"]} ({item["HP"]}, {item["Email"]})')
+                print(f'\n{num}.' + item)
         else:
             print("\nKontak Kosong!")
             return 1
@@ -18,7 +27,7 @@ class Kontak:
         Nama = input("Masukan Nama Kontak Baru: ")
         HP = input("Masukan Nomor HP Baru: ")
         Email = input("Masukan Email Kontak Baru: ")
-        Kontak_Baru = {'Nama': Nama, 'HP': HP, 'Email': Email}
+        Kontak_Baru = f'{Nama} ({HP}, {Email})' + '\n'
         self.kontak.append(Kontak_Baru)
         print("Kontak Baru Berhasil Ditambahkan!")
 
@@ -27,9 +36,16 @@ class Kontak:
         if self.melihat_kontak() == 1:
             return
         else:
-            i_hapus = int(input("\nMasukan Nomor Kontak Yang Akan Dihapus: "))
-            del self.kontak[i_hapus - 1]
-            print("Kontak Dihapus")
+            try:
+                i_hapus = int(input("\nMasukan Nomor Kontak Yang Akan Dihapus: "))
+                del self.kontak[i_hapus - 1]
+                print("Kontak Dihapus")
+            except:
+                print("\nInput yang anda masukan salah")
+
+    def keluar_kontak(self):
+        menyimpan_kontak(isi=self.kontak)
+
 
 Kontak_Kantor = Kontak()
 Kontak_Keluarga = Kontak()
@@ -54,6 +70,8 @@ while True:
 
     elif Pilihan == '4':
         # Keluar
-       break
+        Kontak_Kantor.keluar_kontak()
+
+        break
     else:
         print("Anda Memasukan Pilihan Yang Salah")
